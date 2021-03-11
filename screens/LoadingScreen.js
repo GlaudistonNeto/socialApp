@@ -1,19 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import firebase from 'firebase';
-import Fire from '../Fire';
 
 export default class LoadingScreen extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? "App" : "Auth");
+      this.props.navigation.navigate(user ? 'App' : 'Auth')
     });
   };
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Loading...</Text>
-        <ActivityIndicator style={styles.activity} dize="large"></ActivityIndicator>
+      <View style={[styles.container, styles.vertical]}>
+        <Text style={{ color: '#fff' }}>Loading...</Text>
+          <ActivityIndicator size='large' color='#fff' />
       </View>
     );
   };
@@ -22,10 +21,12 @@ export default class LoadingScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#263237',
   },
-  text: {
-    color: '#021235',
-  }
+  vertical: {
+    flexDirection: 'column',
+    padding: 10,
+  },
 });

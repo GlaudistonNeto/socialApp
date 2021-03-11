@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 
 export default class MessageScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Message Screen</Text>
+        <Text style={{ color: '#fff' }}> Message Screen </Text>
       </View>
     );
   };
@@ -14,7 +14,8 @@ export default class MessageScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#263237',
   },
 });

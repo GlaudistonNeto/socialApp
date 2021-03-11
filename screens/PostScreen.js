@@ -1,92 +1,71 @@
-import React from 'react';
+import React, { Component } from 'react'
 import {
-  View,
-  Text,
   StyleSheet,
+  Text,
+  View,
   SafeAreaView,
   TouchableOpacity,
   Image,
   TextInput,
- } from 'react-native';
- import { Ionicons } from "@expo/vector-icons";
- import Constants from "expo-constants";
- import * as Permissions from "expo-permissions";
- import * as ImagePicker from "expo-image-picker";
- import Fire from '../Fire';
+  RefreshControl
+} from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import Fire from '../Fire';
+import UserPermissions from '../utilities/UserPermissions';
 
- const firebase = require("firebase");
- require("firebase/firestore");
-
-export default class PostScreen extends React.Component {
+export default class PostScreen extends Component {
   state = {
-    text: "",
-    image: null,
+    text: '',
+    image: null
   };
 
   componentDidMount() {
-    this.getPhotoPermission();
-  }
-
-  getPhotoPermission = async () => {
-    if (Constants.platform.ios) {
-      const { status } = await Permissions
-        .askAsync(Permissions.CAMERA);
-
-      if (status != 'granted') {
-        alert("We need permission to access your camera");
-      }
-    }
+    UserPermissions.getCameraPermission()
   };
 
   handlePost = () => {
     Fire.shared
-      .addPost(
-        { text: this.state.text.trim(), localUri: this.state.image }
-      )
-      .then(ref => {
-        this.setState({ text: "", image: null });
-        this.props.navigation.goBack();
-      })
-      .catch(error => {
-        alert(error);
-      });
+    .addPost({ text: this.state.text.trim(), localUri: this.state.image })
+    .then(ref => {
+      this.setState({ text: '', image: null });
+      this.props.navigation.goBack();
+    })
+    .catch(error => {
+      alert(error);
+    });
   };
 
   pickImage = async () => {
-    let result = await ImagePicker.launchCameraAsync({
+    let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1]
     });
 
-    if (!result.cancelled) {
+    if (!RefreshControl.cancelled) {
       this.setState({ image: result.uri });
-    };
+    }
   };
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Ionicons
-              name="md-arrow-back-circle"
-              size={24}
-              color="#D8D9DB"
-            />
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <Ionicons name='md-arrow-back' size={24} color='#fff' />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.handlePost}
-          >
-            <Text style={{ fontWeight: "500", }}>Post</Text>
+
+          <TouchableOpacity onPress={this.handlePost}>
+            <Text style={{ fontWeight: '500', color:'#fff' }}>Post</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.inputContainer}>
           <Image
-            source={require("../assets/tempAvatar.png")}
+            source={require('../assets/tempAvatar.png')}
             style={styles.avatar}
           />
           <TextInput
@@ -94,31 +73,25 @@ export default class PostScreen extends React.Component {
             multiline={true}
             numberOfLines={4}
             style={{ flex: 1 }}
-            placeholder="Want to share something?"
+            placeholder='want to share something?'
             onChangeText={text => this.setState({ text })}
             value={this.state.text}
           />
         </View>
 
-        <TouchableOpacity style={styles.photo}
-          onPress={this.pickImage}
-        >
-        <Ionicons
-              name="md-camera-sharp"
-              size={32}
-              color="#D8D9DB"
-            />
+        <TouchableOpacity style={styles.photo} onPress={this.pickImage}>
+          <Ionicons
+            name='md-camera'
+            size={32}
+            color='#d8d9db'
+          />
         </TouchableOpacity>
 
-        <View style={{
-          marginHorizontal: 32,
-          marginTop: 32,
-          height: 150,
-        }}>
-        <Image
-          source={{ uri: this.state.image }}
-          style={{ width: "100%", height: "100%" }}
-        />
+        <View style={{ marginHorizontal: 32, marginTop: 32, height: 150 }}>
+          <Image
+            source={{ uri: this.state.image }}
+            style={{ width: '100%', height: '100%' }}
+          />
         </View>
       </SafeAreaView>
     );
@@ -128,27 +101,28 @@ export default class PostScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#263237',
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 32,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#D8D9D8"
+    borderBottomColor: '#bc8343',
   },
   inputContainer: {
     margin: 32,
-    flexDirection: "row",    
-  },
-  avatar: {
+    flexDirection: 'row',
+
+  }, avatar: {
     width: 48,
     height: 48,
     borderRadius: 24,
     marginRight: 16,
   },
   photo: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
     marginHorizontal: 32,
   },
 });

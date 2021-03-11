@@ -1,53 +1,57 @@
+import { StatusBar } from 'expo-status-bar';
+import firebase from '../config/firebaseDefault';
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-  LayoutAnimation,
-} from 'react-native';
-import * as firebase from "firebase";
-import { Ionicons } from "@expo/vector-icons";
+import { Image, LayoutAnimation, StyleSheet, Text, View } from 'react-native';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
-export default class LoginScreen extends React.Component {
+export default class LoadingScreen extends React.Component {
   static navigationOptions = {
     headerShown: false
   };
 
   state = {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
     errorMessage: null,
   };
 
   handleLogin = () => {
     const {email, password} = this.state;
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .catch(error => this.setState({ errorMessage: error.message }))
+    firebase.auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(error => this.setState({ errorMessage: error.message }));
   };
 
   render() {
     LayoutAnimation.easeInEaseOut();
-    
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content"></StatusBar>
+       <View style={styles.container}>
+        <StatusBar barStyle='light-content'></StatusBar>
+
         <Image
-          source={require('../assets/authHeader.png')}
-          style={{ marginTop: -296, marginLeft: -50 }}
+          source={require('../assets/auth.jpg')}
+          style={{ marginTop: -576,  marginLeft: -250 }}
         />
 
-        <Text style={styles.greeting}>
-          {`Hello again. \nWelcome back`}
+        <Image
+          source={require('../assets/auth.jpg')}
+          style={{ position: 'absolute',  bottom: -575 }}
+        />
+
+        <Image
+          source={require('../assets/Hi.png')}
+          style={{ marginTop: -30,  alignSelf: 'flex-start' }}
+        />
+
+        <Text style={styles.greating}>
+          {'Welcome aboard.\nWelcome back'}
         </Text>
 
         <View style={styles.errorMessage}>
-          {this.state.errorMessage && <Text
-            style={styles.error}>{this.state.errorMessage}</Text>}
+          {this.state.errorMessage && <Text style={styles.errorMessage}>
+            {this.state.errorMessage}
+          </Text>}
         </View>
 
         <View style={styles.form}>
@@ -55,37 +59,35 @@ export default class LoginScreen extends React.Component {
             <Text style={styles.inputTitle}>Email Address</Text>
             <TextInput
               style={styles.input}
-              autocapitalize="none"
-              onChangeText={email=> this.setState({ email })}
+              autoCapitalize='none'
+              onChangeText={email => this.setState({ email })}
               value={this.state.email}
             />
           </View>
+
           <View style={{ marginTop: 32 }}>
-          <Text style={styles.inputTitle}>Password</Text>
-          <TextInput
-            style={styles.input}
-            autocapitalize="none"
-            onChangeText={password => this.setState({ password })}
-            value={this.state.password}
-          />
+            <Text style={styles.inputTitle}>Password</Text>
+            <TextInput
+              style={styles.input}
+              autoCapitalize='none'
+              secureTextEntry={true}
+              onChangeText={password => this.setState({ password })}
+              value={this.state.password}
+            />
+          </View>
         </View>
-      </View>
-        <TouchableOpacity style={styles.button}
-          onPress={this.handleLogin}
-        >
-          <Text style={{ color: "#FFF", fontWeight: "500", }}>
-            Sign In
-          </Text>
+
+        <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+          <Text style={{ color: '#fff', fontWeight: '500' }}>Sign in</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={{ alignSelf: "center", marginTop: 32 }}
-          onPress={() => this.props.navigation.navigate("Register")}
+          style={{ alignSelf: 'center', marginTop: 32 }}
+          onPress={() => this.props.navigation.navigate('Register')}
         >
-          <Text style={{ color: "#414959", fontSize: 13, }}>
-            New to Social App? <Text style={{ fontWeight: "500",
-            color: "#E9446A", }}>
-              Sign Up
+          <Text style={{ color: '#fff', fontSize: 13 }}>
+            New to Social App? <Text style={{ color: '#ff2222', fontWeight: '500' }}>
+              Sign up
             </Text>
           </Text>
         </TouchableOpacity>
@@ -97,47 +99,49 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#263237',
   },
-  greeting: {
-    marginTop: -32,
+  greating: {
+    color: '#fff',
+    marginTop: 32,
     fontSize: 18,
-    fontWeight: "400",
-    textAlign: "center",
+    fontWeight: '400',
+    textAlign: 'center'
   },
   errorMessage: {
+    color: '#ff222266',
     height: 72,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: 30
   },
   error: {
-    color: "#E9446A",
+    color: '#e9446a',
     fontSize: 13,
-    fontWeight: "600",
-    textAlign: "center",
+    fontWeight: '600',
+    textAlign: 'center',
   },
   form: {
     marginBottom: 48,
     marginHorizontal: 30,
   },
   inputTitle: {
-    color: "#8A8F9E",
+    color: '#156cc5',
     fontSize: 10,
-    textTransform: "uppercase",
-  },
-  input: {
-    borderBottomColor: "#8A8F9E",
+    textTransform: 'uppercase',
+  }, input: {
+    borderBottomColor: '#ff2222',
     borderBottomWidth: StyleSheet.hairlineWidth,
     height: 40,
     fontSize: 15,
-    color: "#161F3D"
+    color: '#7cdcfe'
   },
   button: {
     marginHorizontal: 30,
-    backgroundColor: "#E9446A",
+    backgroundColor: '#e9446a',
     borderRadius: 4,
     height: 52,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
